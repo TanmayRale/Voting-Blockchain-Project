@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aadhar Verification</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../bootstrap/css/bootstrap.min.css"
+    />
+    <script defer src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+      .typing-animation {
+        font-size: 2.5em;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        border-right: 3px solid;
+        width: 0;
+        animation: typing 5.5s steps(30, end) infinite,
+          blink-caret 0.75s step-end infinite;
+      }
+
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 29%;
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: black;
+        }
+      }
+
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      footer p {
+        margin: 0;
+        font-size: 1em;
+      }
+
+      #main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10%;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary"
+      style="position: sticky; top: 0px; z-index: 100"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">OVP</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="About.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="Contact.html">Contact Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="VoteCount.html">Result</a>
+            </li>
+          </ul>
+
+          <div class="btn-group">
+            <a class="btn btn-outline-success" href="Login.html"> Login </a>
+            <a class="btn btn-outline-primary" href="Register.html">
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        position: relative;
+        top: 80px;
+      "
+    >
+      <img src="images/Adhaar.webp" style="height: 300px" alt="" />
+
+      <form
+        class="needs-validation"
+        action="http://localhost:5000/verify-aadhar"
+        method="post"
+        novalidate
+        style="margin-top: 90px"
+      >
+        <div id="main">
+          <label for="form-label" style="margin-bottom: 1%; font-size: 20px"
+            >Aadhar Number</label
+          >
+          <div>
+            <input
+              type="text"
+              pattern="^\d{12}$"
+              name="aadharNumber"
+              class="form-control"
+              style="width: 300px"
+              placeholder="123456789876"
+              required
+            />
+            <div class="invalid-feedback">
+              Please enter a valid Aadhar number (12 digits).
+            </div>
+            <div class="valid-feedback">Looks Good.</div>
+          </div>
+          <input
+            type="submit"
+            value="Submit"
+            class="btn btn-primary"
+            style="margin-top: 1%"
+          />
+        </div>
+      </form>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 Online Voting System. All rights reserved.</p>
+    </footer>
+
+    <script>
+      (() => {
+        "use strict";
+
+        const forms = document.querySelectorAll(".needs-validation");
+
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            "submit",
+            (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              } else {
+                
+                const aadharNumber = form.querySelector(
+                  'input[name="aadharNumber"]'
+                ).value;
+                sessionStorage.setItem("aadharNumber", aadharNumber);
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
+  </body>
+</html>

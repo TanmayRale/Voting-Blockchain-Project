@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voting Results</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../bootstrap/css/bootstrap.min.css"
+    />
+    <script defer src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.3.6/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      footer p {
+        margin: 0;
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary"
+      style="position: sticky; top: 0px; z-index: 100"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">OVP</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="AdminPanel.html"
+                >Dashboard</a
+              >
+            </li>
+          </ul>
+          <div class="btn-group">
+            <a class="btn btn-outline-success" href="Login.html"> Login </a>
+            <a class="btn btn-outline-primary" href="Register.html">Register</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container" style="margin-top: 20px">
+      <h2>Voting Results</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Party Name</th>
+            <th>Candidate Name</th>
+            <th>Party Symbol</th>
+            <th>district</th>
+            <th>Votes</th>
+          </tr>
+        </thead>
+        <tbody id="resultTable">
+          <!-- Results will be populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 Online Voting System. All rights reserved.</p>
+    </footer>
+
+    <script>
+      const contractAddress = "0x68B1D87F95878fE05B998F19b66F4baba5De1aed"; // Replace with your deployed contract address
+      const contractABI = [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+          ],
+          name: "AdminSet",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "partyId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "candidateName",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "partyName",
+              type: "string",
+            },
+          ],
+          name: "PartyAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "voter",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "partyId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "aadharNumber",
+              type: "string",
+            },
+          ],
+          name: "VoteCasted",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_candidateName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_partyName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_symbolPath",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_state",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_zip",
+              type: "string",
+            },
+          ],
+          name: "addParty",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "admin",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_partyId",
+              type: "uint256",
+            },
+          ],
+          name: "getParty",
+          outputs: [
+            {
+              internalType: "string",
+              name: "candidateName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "partyName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "symbolPath",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "state",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "zip",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "voteCount",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_partyId",
+              type: "uint256",
+            },
+          ],
+          name: "getTotalVotes",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "parties",
+          outputs: [
+            {
+              internalType: "string",
+              name: "candidateName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "partyName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "symbolPath",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "state",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "zip",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "voteCount",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "partyCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_newAdmin",
+              type: "address",
+            },
+          ],
+          name: "setAdmin",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_partyId",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_aadharNumber",
+              type: "string",
+            },
+          ],
+          name: "vote",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ];
+
+      async function fetchResults() {
+        if (typeof window.ethereum === "undefined") {
+          alert("Please install MetaMask!");
+          return;
+        }
+
+        const web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+
+        const votingContract = new web3.eth.Contract(
+          contractABI,
+          contractAddress
+        );
+        const resultTable = document.getElementById("resultTable");
+        resultTable.innerHTML = "";
+
+        try {
+          const partyCount = await votingContract.methods.partyCount().call();
+
+          for (let i = 1; i <= partyCount; i++) {
+            const party = await votingContract.methods.getParty(i).call();
+
+            const row = `
+            <tr>
+              <td>${party.partyName}</td>
+              <td>${party.candidateName}</td>
+              <td><img src="../${party.symbolPath}" style="width: 50px;" alt="${party.partyName}"></td>
+              <td>${party.state}</td>
+              <td>${party.voteCount}</td>
+            </tr>`;
+            resultTable.insertAdjacentHTML("beforeend", row);
+          }
+        } catch (error) {
+          console.error("Error fetching results:", error);
+        }
+      }
+
+      fetchResults();
+    </script>
+  </body>
+</html>

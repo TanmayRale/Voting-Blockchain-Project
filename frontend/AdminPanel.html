@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="..\bootstrap\css\bootstrap.min.css"
+    />
+    <script defer src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      footer p {
+        margin: 0;
+        font-size: 1em;
+      }
+
+      .fade-in {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .fade-in.visible {
+        opacity: 1;
+      }
+
+      .ib{
+        display: inline-block;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary"
+      style="position: sticky; top: 0px; z-index: 100"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">OVP</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="AdminPanel.html">Dashboard</a>
+            </li>
+          </ul>
+
+          <div class="btn-group">
+            <a class="btn btn-outline-success" href="Login.html"> Login </a>
+            <a class="btn btn-outline-primary" href="Register.html">
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="card ib" style="width:300px;">
+        <img src="../images/political_party.jpg" style="height: 200px;" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Add Parties</h5>
+          <p class="card-text">Add political Parties</p>
+          <a href="AddParties.html" class="btn btn-primary">Add</a>
+        </div>
+    </div>
+
+    <div class="card ib" style="width: 300px">
+        <img src="../images/Voters.avif" style="height: 200px;" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Manage Voters</h5>
+          <p class="card-text">Add , Remove or Update Data</p>
+          <a href="AddVoters.html" class="btn btn-primary">Manage</a>
+        </div>
+    </div>
+
+      <div class="card ib" style="width: 300px;">
+        <img src="../images/votes.jpg" style="height: 200px;" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Check Votes</h5>
+          <p class="card-text">Check the number of votes</p>
+          <a href="result.html" class="btn btn-primary">Check</a>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <p>&copy; 2024 Online Voting System. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

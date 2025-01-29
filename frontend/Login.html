@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Voting Platform</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../bootstrap/css/bootstrap.min.css"
+    />
+    <script defer src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.3.6/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+    <style>
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      footer p {
+        margin: 0;
+        font-size: 1em;
+      }
+
+      #admin {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary"
+      style="position: sticky; top: 0px; z-index: 100"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">OVP</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="About.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="Contact.html">Contact Us</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="VoteCount.html">Result</a>
+            </li>
+          </ul>
+
+          <div class="btn-group">
+            <a class="btn btn-outline-success" href="Login.html"> Login </a>
+            <a class="btn btn-outline-primary" href="Register.html">
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <center>
+      <div class="btn-group my-5">
+        <button
+          class="btn btn-outline-success"
+          onclick="urolechange()"
+          value="user"
+        >
+          User
+        </button>
+        <button
+          class="btn btn-outline-primary"
+          onclick="arolechange()"
+          value="admin"
+        >
+          Admin
+        </button>
+      </div>
+    </center>
+
+    <div style="display: flex; justify-content: center">
+      <img src="../images/login.jpg" style="height: 300px; margin-right: 50px" alt="" />
+
+      <!-- User Login Form -->
+      <div id="user">
+        <div class="container d-flex justify-content-center my-5">
+          <div class="card" style="width: 18rem">
+            <div class="card-body">
+              <form id="user-login-form" class="row g-3 needs-validation" novalidate>
+                <div class="col-md-12">
+                  <label for="validationemail" class="form-label">Email</label>
+                  <div class="has-validation">
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="validationemail"
+                      name="email"
+                      aria-describedby="inputGroupPrepend"
+                      required
+                    />
+                    <div class="invalid-feedback">Please Enter a Valid Email.</div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <label for="validationUserPassword" class="form-label">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="validationUserPassword"
+                    name="password"
+                    required
+                  />
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col-12">
+                  <button class="btn btn-success" type="submit">Login</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Login Form -->
+      <div id="admin">
+        <div class="container d-flex justify-content-center my-5">
+          <div class="card" style="width: 18rem">
+            <div class="card-body">
+              <form id="admin-login-form" class="row g-3 needs-validation" novalidate>
+                <div class="col-md-12">
+                  <label for="validationadminId" class="form-label">Admin-ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationadminId"
+                    name="adminId"
+                    required
+                  />
+                  <div class="invalid-feedback">Please Enter Valid ID.</div>
+                </div>
+                <div class="col-md-12">
+                  <label for="validationAdminPassword" class="form-label">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="validationAdminPassword"
+                    name="password"
+                    required
+                  />
+                  <div class="valid-feedback">Looks good!</div>
+                </div>
+                <div class="col-md-12">
+                  <label for="validationAdminAccount" class="form-label">Ethereum Account</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="validationAdminAccount"
+                    name="ethereumAccount"
+                    required
+                  />
+                  <div class="invalid-feedback">Please Enter a Valid Ethereum Address.</div>
+                </div>
+                <div class="col-12">
+                  <button class="btn btn-primary" type="submit">Login</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <script>
+
+      const contractAddress = "0x68B1D87F95878fE05B998F19b66F4baba5De1aed";
+      const contractABI = [
+      {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "AdminSet",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "partyId",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "candidateName",
+            "type": "string"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "partyName",
+            "type": "string"
+          }
+        ],
+        "name": "PartyAdded",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "voter",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "uint256",
+            "name": "partyId",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "string",
+            "name": "aadharNumber",
+            "type": "string"
+          }
+        ],
+        "name": "VoteCasted",
+        "type": "event"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "_candidateName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_partyName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_symbolPath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_state",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_zip",
+            "type": "string"
+          }
+        ],
+        "name": "addParty",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "admin",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_partyId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getParty",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "candidateName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "partyName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbolPath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "zip",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "voteCount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_partyId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getTotalVotes",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "parties",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "candidateName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "partyName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "symbolPath",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "state",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "zip",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "voteCount",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "partyCount",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_newAdmin",
+            "type": "address"
+          }
+        ],
+        "name": "setAdmin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_partyId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_aadharNumber",
+            "type": "string"
+          }
+        ],
+        "name": "vote",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ];
+
+// Admin Login Form Submission
+document.getElementById("admin-login-form").addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const data = Object.fromEntries(formData.entries());
+  const ethereumAccount = data.ethereumAccount;
+  console.log(ethereumAccount)
+  try {
+    // Step 1: Validate admin credentials via backend
+    const response = await fetch("http://localhost:5000/admin-login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ adminId: data.adminId, password: data.password }),
+    });
+
+    const result = await response.json();
+
+    if (result.message === "Admin login successful") {
+      alert(result.message);
+
+      if (typeof window.ethereum !== "undefined") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []); 
+
+        const signer = provider.getSigner();
+        console.log(signer)
+        const votingContract = new ethers.Contract(contractAddress, contractABI, signer);
+        console.log(votingContract)
+        try {
+          const tx = await votingContract.setAdmin(ethereumAccount);
+          await tx.wait(); 
+          console.log(tx)
+          alert("Admin successfully set on the blockchain!");
+          console.log("Transaction Hash:", tx.hash);
+          window.location.href = result.redirect; 
+        } catch (error) {
+          console.error("Blockchain transaction failed:", error);
+          alert("Failed to set admin on the blockchain. Please try again.");
+        }
+      } else {
+        alert("Please install MetaMask or another Ethereum-compatible wallet.");
+      }
+    } else {
+      alert(result.message);
+    }
+  } catch (error) {
+    console.error("Error during admin login:", error);
+    alert("Admin login failed");
+  }
+});
+
+
+
+
+      //user login
+      document.getElementById("user-login-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+      
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+      
+        try {
+          const response = await fetch("http://localhost:5000/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+      
+          let result;
+          try {
+            result = await response.json(); 
+          } catch (error) {
+            result = { message: await response.text() }; 
+          }
+      
+          if (response.ok) {
+            alert(result.message);
+            window.location.href = result.redirect;
+          } else {
+            alert(result.message);
+          }
+        } catch (error) {
+          console.error("Error during login:", error);
+          alert("An error occurred. Please try again.");
+        }
+      });
+      
+      
+
+      // Toggle user and admin login forms
+      const user = document.getElementById("user");
+      const admin = document.getElementById("admin");
+      function urolechange() {
+        user.style.display = "block";
+        admin.style.display = "none";
+      }
+
+      function arolechange() {
+        user.style.display = "none";
+        admin.style.display = "block";
+      }
+    </script>
+
+    <footer>
+      <p>&copy; 2024 Online Voting Platform. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

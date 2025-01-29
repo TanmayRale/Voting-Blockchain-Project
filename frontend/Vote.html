@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vote</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="..\bootstrap\css\bootstrap.min.css"
+    />
+    <script defer src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <style>
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      footer p {
+        margin: 0;
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary"
+      style="position: sticky; top: 0px; z-index: 100"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">OVP</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="About.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="Contact.html">Contact Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="VoteCount.html">Result</a>
+            </li>
+          </ul>
+          <div class="btn-group">
+            <a class="btn btn-outline-success" href="Login.html">Login</a>
+            <a class="btn btn-outline-primary" href="Register.html">Register</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <table style="margin-top: 20px" class="table" id="partyTable">
+      <thead>
+        <tr>
+          <th>Party Image</th>
+          <th>Party Name</th>
+          <th>Candidate Name</th>
+          <th>Vote</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      let contract;
+      let account;
+      const contractAddress = "0x68B1D87F95878fE05B998F19b66F4baba5De1aed"; // Replace with your contract address
+      const contractABI = [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+          ],
+          name: "AdminSet",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "partyId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "candidateName",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "partyName",
+              type: "string",
+            },
+          ],
+          name: "PartyAdded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "voter",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "partyId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "aadharNumber",
+              type: "string",
+            },
+          ],
+          name: "VoteCasted",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "_candidateName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_partyName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_symbolPath",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_state",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "_zip",
+              type: "string",
+            },
+          ],
+          name: "addParty",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "admin",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_partyId",
+              type: "uint256",
+            },
+          ],
+          name: "getParty",
+          outputs: [
+            {
+              internalType: "string",
+              name: "candidateName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "partyName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "symbolPath",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "state",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "zip",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "voteCount",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_partyId",
+              type: "uint256",
+            },
+          ],
+          name: "getTotalVotes",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "parties",
+          outputs: [
+            {
+              internalType: "string",
+              name: "candidateName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "partyName",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "symbolPath",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "state",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "zip",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "voteCount",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "partyCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_newAdmin",
+              type: "address",
+            },
+          ],
+          name: "setAdmin",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "_partyId",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "_aadharNumber",
+              type: "string",
+            },
+          ],
+          name: "vote",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ];
+
+      // Connect to the blockchain and load parties
+      async function loadWeb3() {
+        if (window.ethereum) {
+          window.web3 = new Web3(window.ethereum);
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+          const accounts = await web3.eth.getAccounts();
+          account = accounts[0];
+          contract = new web3.eth.Contract(contractABI, contractAddress);
+          console.log("Connected to Web3:", account);
+          loadParties();
+        } else {
+          alert("Please install MetaMask to use this feature.");
+        }
+      }
+
+      async function loadParties() {
+        const partyCount = await contract.methods.partyCount().call();
+        console.log("Total Parties:", partyCount);
+        const partyTable = document
+          .getElementById("partyTable")
+          .getElementsByTagName("tbody")[0];
+        partyTable.innerHTML = "";
+        const sessionZone = sessionStorage.getItem("selectedZone");
+        for (let i = 1; i <= partyCount; i++) {
+          const party = await contract.methods.getParty(i).call();
+          if (party.state == sessionZone) {
+            let row = partyTable.insertRow();
+
+            row.innerHTML = `
+            <td><img src="../${party.symbolPath}" alt="Party Symbol" width="50"></td>
+            <td>${party.partyName}</td>
+            <td>${party.candidateName}</td>
+            <td><button class="btn btn-primary" onclick="vote(${i})">Vote</button></td>
+          `;
+          }
+        }
+      }
+
+      // Get Aadhaar from session storage
+      function getAadharFromSession() {
+        const sessionAadhar = sessionStorage.getItem("aadharNumber");
+        if (!sessionAadhar) {
+          alert("Aadhaar number not found in session. Please log in again.");
+        }
+        return sessionAadhar;
+      }
+
+      // Voting function
+      async function vote(partyId) {
+        const sessionAadhar = getAadharFromSession();
+
+        if (!sessionAadhar) {
+          return;
+        }
+
+        try {
+          await contract.methods
+            .vote(partyId, sessionAadhar)
+            .send({ from: account });
+          alert(`You voted successfully for party ${partyId}`);
+        } catch (error) {
+          console.error(error);
+          alert(
+            "Failed to vote. You may have already voted or encountered an error."
+          );
+        }
+      }
+
+      window.onload = loadWeb3;
+    </script>
+
+    <footer>
+      <p>&copy; Online Voting Platform</p>
+    </footer>
+  </body>
+</html>

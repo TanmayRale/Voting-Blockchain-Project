@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="..\bootstrap\css\bootstrap.min.css"
+    />
+    <script defer src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+    <style>
+      footer {
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+
+      footer p {
+        margin: 0;
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <nav
+      class="navbar navbar-expand-lg bg-body-tertiary"
+      style="position: sticky; top: 0px; z-index: 100"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">OVP</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html"
+                >Home</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="About.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="Contact.html">Contact Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="VoteCount.html">Result</a>
+            </li>
+          </ul>
+
+          <div class="btn-group">
+            <a class="btn btn-outline-success" href="Login.html"> Login </a>
+            <a class="btn btn-outline-primary" href="Register.html">
+              Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <form class="row g-3 needs-validation" novalidate>
+        <div class="col-md-4">
+          <label for="validationCustom01" class="form-label">First name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="fname"
+            name="fname"
+            value="ABC"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustom02" class="form-label">Last name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lname"
+            name="lname"
+            value="XYZ"
+            required
+          />
+          <div class="valid-feedback">Looks good!</div>
+        </div>
+        <div class="col-md-4">
+          <label for="validationCustomUsername" class="form-label"
+            >Username</label
+          >
+          <div class="input-group has-validation">
+            <span class="input-group-text" id="inputGroupPrepend">@</span>
+            <input
+              type="text"
+              class="form-control"
+              id="uname"
+              name="uname"
+              aria-describedby="inputGroupPrepend"
+              required
+            />
+            <div class="invalid-feedback">Please choose a username.</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="validationCustom03" class="form-label">City</label>
+          <input
+            type="text"
+            class="form-control"
+            id="city"
+            name="city"
+            required
+          />
+          <div class="invalid-feedback">Please provide a valid city.</div>
+        </div>
+
+        <div class="col-md-3">
+          <label for="validationCustom04" class="form-label">State</label>
+          <select class="form-select" id="state" name="state" required>
+            <option selected disabled value="">Choose...</option>
+            <option value="andhra_pradesh">Andhra Pradesh</option>
+            <option value="arunachal_pradesh">Arunachal Pradesh</option>
+            <option value="assam">Assam</option>
+            <option value="bihar">Bihar</option>
+            <option value="chhattisgarh">Chhattisgarh</option>
+            <option value="goa">Goa</option>
+            <option value="gujarat">Gujarat</option>
+            <option value="haryana">Haryana</option>
+            <option value="himachal_pradesh">Himachal Pradesh</option>
+            <option value="jharkhand">Jharkhand</option>
+            <option value="karnataka">Karnataka</option>
+            <option value="kerala">Kerala</option>
+            <option value="madhya_pradesh">Madhya Pradesh</option>
+            <option value="maharashtra">Maharashtra</option>
+            <option value="manipur">Manipur</option>
+            <option value="meghalaya">Meghalaya</option>
+            <option value="mizoram">Mizoram</option>
+            <option value="nagaland">Nagaland</option>
+            <option value="odisha">Odisha</option>
+            <option value="punjab">Punjab</option>
+            <option value="rajasthan">Rajasthan</option>
+            <option value="sikkim">Sikkim</option>
+            <option value="tamil_nadu">Tamil Nadu</option>
+            <option value="telangana">Telangana</option>
+            <option value="tripura">Tripura</option>
+            <option value="uttar_pradesh">Uttar Pradesh</option>
+            <option value="uttarakhand">Uttarakhand</option>
+            <option value="west_bengal">West Bengal</option>
+            <option value="andaman_nicobar">Andaman and Nicobar Islands</option>
+            <option value="chandigarh">Chandigarh</option>
+            <option value="dadra_nagar_haveli_daman_diu">
+              Dadra and Nagar Haveli and Daman and Diu
+            </option>
+            <option value="delhi">Delhi</option>
+            <option value="lakshadweep">Lakshadweep</option>
+            <option value="puducherry">Puducherry</option>
+            <option value="ladakh">Ladakh</option>
+            <option value="jammu_kashmir">Jammu and Kashmir</option>
+          </select>
+          <div class="invalid-feedback">Please select a valid state.</div>
+        </div>
+
+        <div class="col-md-3">
+          <label for="district" class="form-label">District</label>
+          <select class="form-select" id="district" name="district" required>
+            <option selected disabled value="">Choose...</option>
+            <option value="ahmednagar">Ahmednagar</option>
+            <option value="akola">Akola</option>
+            <option value="aurangabad">Aurangabad</option>
+            <option value="beed">Beed</option>
+            <option value="bhandara">Bhandara</option>
+            <option value="buldhana">Buldhana</option>
+            <option value="chandrapur">Chandrapur</option>
+            <option value="dhule">Dhule</option>
+            <option value="dindori">Dindori</option>
+            <option value="gadchiroli">Gadchiroli</option>
+            <option value="gondia">Gondia</option>
+            <option value="jalgaon">Jalgaon</option>
+            <option value="jalna">Jalna</option>
+            <option value="nanded">Nanded</option>
+            <option value="nagpur">Nagpur</option>
+            <option value="nandurbar">Nandurbar</option>
+            <option value="nashik">Nashik</option>
+            <option value="palghar">Palghar</option>
+            <option value="parbhani">Parbhani</option>
+            <option value="pune">Pune</option>
+            <option value="raigad">Raigad</option>
+            <option value="ratnagiri">Ratnagiri</option>
+            <option value="sangli">Sangli</option>
+            <option value="satara">Satara</option>
+            <option value="solapur">Solapur</option>
+            <option value="wardha">Wardha</option>
+            <option value="washim">Washim</option>
+            <option value="yavatmal">Yavatmal</option>
+          </select>
+          <div class="invalid-feedback">Please select a valid district.</div>
+        </div>
+
+        <div class="col-md-3">
+          <label for="zip" class="form-label">Zip</label>
+          <input
+            type="text"
+            class="form-control"
+            id="zip"
+            name="zip"
+            required
+          />
+          <div class="invalid-feedback">Please provide a valid zip.</div>
+        </div>
+
+        <div class="col-md-4">
+          <label for="email" class="form-label">Email</label>
+          <div class="has-validation">
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              aria-describedby="inputGroupPrepend"
+              required
+            />
+            <div class="invalid-feedback">Please Enter Valid email.</div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <label for="mobile" class="form-label">Mobile Number</label>
+          <div class="has-validation">
+            <input
+              type="number"
+              class="form-control"
+              id="mobile"
+              name="mobile"
+              aria-describedby="inputGroupPrepend"
+              required
+              maxlength="10"
+            />
+            <div class="invalid-feedback">Enter Valid mobile number.</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="has-validation">
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              aria-describedby="inputGroupPrepend"
+              required
+              maxlength="10"
+            />
+            <div class="invalid-feedback">Enter Valid password.</div>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="invalidCheck"
+              required
+            />
+            <label class="form-check-label" for="invalidCheck">
+              Agree to terms and conditions
+            </label>
+            <div class="invalid-feedback">
+              You must agree before submitting.
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      (() => {
+        "use strict";
+        const forms = document.querySelectorAll(".needs-validation");
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            "submit",
+            (event) => {
+              if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+
+              form.classList.add("was-validated");
+            },
+            false
+          );
+        });
+      })();
+    </script>
+    <script>
+      document
+        .querySelector("form")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const formData = {
+            firstName: document.getElementById("fname").value,
+            lastName: document.getElementById("lname").value,
+            username: document.getElementById("uname").value,
+            city: document.getElementById("city").value,
+            state: document.getElementById("state").value,
+            district: document.getElementById("district").value,
+            zip: document.getElementById("zip").value,
+            email: document.getElementById("email").value,
+            mobileNumber: document.getElementById("mobile").value,
+            password: document.getElementById("password").value,
+          };
+
+          try {
+            const response = await fetch("http://localhost:5000/register", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+              alert("Registration successful!");
+              window.location.href = "Login.html";
+            } else {
+              alert("Registration failed. Please try again.");
+            }
+          } catch (error) {
+            console.error("Error during registration:", error);
+          }
+        });
+    </script>
+
+    <footer>
+      <p>&copy; 2024 Online Voting System. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
